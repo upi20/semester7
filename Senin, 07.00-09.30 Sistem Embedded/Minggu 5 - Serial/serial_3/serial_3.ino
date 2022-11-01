@@ -13,11 +13,13 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  while(Serial.available() != 0){
-    char data = Serial.read(); // terima data dari port serial
-    // kirim kembali data ke port
-    Serial.print("Karakter: ");
-    Serial.println(data);
-    delay(20);
+  while(Serial.available() != 0){ // terima data dari port serial
+    // int data = Serial.parseInt(); // bilangan bulat
+    float data = Serial.parseFloat(); // bilangan desimal
+    if(data != 0 ){
+      Serial.print("Bilangan: ");
+      Serial.println(data);
+      delay(20);
+    }
   }
 }

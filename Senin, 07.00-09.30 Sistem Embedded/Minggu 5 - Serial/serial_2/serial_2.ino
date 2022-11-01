@@ -16,8 +16,21 @@ void loop() {
   while(Serial.available() != 0){
     char data = Serial.read(); // terima data dari port serial
     // kirim kembali data ke port
+    // Karakter
     Serial.print("Karakter: ");
-    Serial.println(data);
+    Serial.print(data);
+
+    // ascii
+    Serial.print(", ASCII: ");
+    Serial.print(data, DEC);
+
+    // biner
+    Serial.print(", Biner: ");
+    Serial.print(data, BIN);
+
+    // hexadesimal
+    Serial.print(", Hexadesimal: ");
+    Serial.println(data, HEX);
     delay(20);
   }
 }

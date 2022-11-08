@@ -1,3 +1,9 @@
+// Kelompok 
+// Isep Lutpi Nur [2113191079]
+// Farhan Aziz [2113191097]
+// Muhammad Bayu Ramdhani [2113191081]
+// Muhammad Taufik Ali [2113191067]
+
 /* I2C LCD with Arduino example code. More info: https://www.makerguides.com */
 // Include the libraries:
 // LiquidCrystal_I2C.h: https://github.com/johnrickman/LiquidCrystal_I2C

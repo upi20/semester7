@@ -1,0 +1,20 @@
+<html>
+<head></head>
+<body><table class="table table-bordered table-condensed table-hover" id="table-statistik">
+						<thead>
+							<tr>
+								<th colspan="6" class="t-title" id="table-title">Statistik Harga Pangan</th>
+							</tr>
+							<tr>
+								<th rowspan="2" class="t-no">No</th>
+								<th rowspan="2" class="t-commodity">Pasar</th>
+								<th class="title-periode" id="header-periode" colspan="1">Desember 2022</th>
+								<th rowspan="2" class="t-price">Tertinggi<br><span class="title-periode">Desember 2022</span></th>
+								<th rowspan="2" class="t-price">Rata-Rata<br><span class="title-periode">Desember 2022</span></th>
+								<th rowspan="2" class="t-price">Terendah<br><span class="title-periode">Desember 2022</span></th>
+							</tr>
+							<tr id="list-date"><th class="t-price">1</th></tr>
+						</thead>
+						<tbody><tr><td>1</td><td class="text-left">Pasar Perumnas Klender</td><td>&nbsp;</td><td>40000</td><td>40000</td><td>40000</td></tr><tr><td>2</td><td class="text-left">Pasar Kebayoran Lama</td><td>&nbsp;</td><td>38000</td><td>38000</td><td>38000</td></tr><tr><td>3</td><td class="text-left">Pasar Pesanggrahan</td><td>&nbsp;</td><td>38000</td><td>38000</td><td>38000</td></tr><tr><td>4</td><td class="text-left">Pasar Klender SS</td><td>&nbsp;</td><td>40000</td><td>40000</td><td>40000</td></tr></tbody>
+					</table></body>
+</html>

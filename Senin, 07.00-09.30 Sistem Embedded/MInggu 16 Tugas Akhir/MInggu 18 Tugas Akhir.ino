@@ -64,6 +64,7 @@ void loop() {
       digitalWrite(PIN_INDIKATOR_BUZZER, HIGH);
       lcd.print("Mematikan.."); 
       hitung = false;
+      digitalWrite(PIN_BUZZER, HIGH);
     }else{
       digitalWrite(PIN_INDIKATOR_BUZZER, LOW);
       lcd.print("Menghidupkan.."); 

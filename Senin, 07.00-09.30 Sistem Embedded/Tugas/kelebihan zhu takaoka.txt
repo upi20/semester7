@@ -1,0 +1,5 @@
+kelebihan menggunakan algortima di bahasa pemrograman di banding di sql
+1. contoh mencari dengan kata kunci andi kemudian data yang di database [andi, andhi, adnan] kalau di sql like maka yang akan keluar cuman andi, kalau menggunakan algoritma akan keluar [andi, andhi]
+2. resiko penyimpanan rusak akibat read/write yang banyak dari program.
+3. jika menggunakan pemrograman dan running di memory maka akan lebih cepat dan effisien tergantung kecepata prosesor dan memory nya.
+3. membuat kualitas pencarian jadi lebih baik

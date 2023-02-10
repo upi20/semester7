@@ -1,0 +1,662 @@
+// opsi 1 tiap surat jenis surat data  diri nya terpisah tapi masalahnya database nya akan membengkak dan aplikasi menjadi lambat
+// opsi 2 data diri diambil dari tabel penduduk tapi masalahnya bagaimana jika data yang akan diajukan belum ada di tabel penduduk dan database aplikasi menjadi sangat rumit
+
+// Data pendukkung ===============
+  Table pegawai{
+    id int [pk, increment]
+    nama varchar
+    jabatan varchar
+  }
+
+  Table rt{
+    id int [pk, increment]
+    nomor int
+    penduduk_id int [ref: - penduduk.id, note:'untuk akun ketua rt']
+    rw_id int [ref: > rw.id]
+  }
+
+  // rukun warga
+  Table rw{
+    id int [pk, increment]
+    nomor int
+    penduduk_id int [ref: - penduduk.id, note:'untuk akun ketua rw']
+    nama_kp varchar
+  }
+
+  // m = master
+  Table m_agama{
+    id int [pk, increment]
+    nama varchar
+  }
+
+  Table m_pekerjaan{
+    id int [pk, increment]
+    nama varchar
+  }
+
+  Table m_pendidikan{
+    id int [pk, increment]
+    nama varchar
+  }
+
+  Table m_hub_dgn_kk{
+    id int [pk, increment]
+    nama varchar
+    sequence int [note: "Urutan untuk menentukan kepala keluarga contoh: 1 kepala keluarga, 2 istri, 3 anak, 4 cucu"]
+  }
+
+
+
+// Kependudukan ==================
+  // penduduk ====================
+    Table penduduk{
+      id int [pk, increment]
+      nama varchar
+      nik varchar(16)
+      kota_lahir varchar
+      jenis_kelamin int(1) [note: "1 laki-laki 0 perempuan"]
+      alamat_lengkap varchar
+      tanggal_lahir date
+      tanggal_mati date
+      asal_data int(1) [note: "0 kelahiran, 1 kedatangan"]
+      tanggal_datang date [note: "di isi jika asal data = "]
+    }
+
+    Table penduduk_akte{
+      id int [pk, increment]
+      penduduk_id int [ref: > penduduk.id]
+      dari date
+      sampai date
+      foto varchar
+      status int(1) [note: "0 tidak ada, 1 ada"]
+    }
+
+    Table penduduk_ktp{
+      id int [pk, increment]
+      penduduk_id int [ref: > penduduk.id]
+      dari date
+      sampai date
+      foto varchar
+      status int(1) [note: "0 tidak ada, 1 ada"]
+    }
+
+    Table penduduk_negara{
+      id int [pk, increment]
+      penduduk_id int [ref: > penduduk.id]
+      dari date
+      sampai date
+      negara int(1) [note: "0 wna, 1 wni"]
+      negara_nama varchar
+    }
+
+    Table penduduk_status_tinggal{
+      id int [pk, increment]
+      penduduk_id int [ref: > penduduk.id]
+      dari date
+      sampai date
+      status int(1) [note: "0 tidak tetap, 1 tetap"]
+    }
+
+    Table penduduk_kawin{
+      id int [pk, increment]
+      penduduk_id int [ref: > penduduk.id]
+      dari date
+      sampai date
+      status int [note: "0 belum kawn 1 kawin 2 cerai hidup 3 cerai mati"]
+    }
+
+    Table penduduk_transaksi{
+      id int [pk, increment]
+      penduduk_id int [ref: > penduduk.id]
+      rt_id int [ref: > rt.id]
+      dari date
+      sampai date
+      jenis int [note: "1 pindah 2 datang"]
+      alamat_lain varchar
+    }
+
+    // penduduk data master ========
+      Table penduduk_agama{
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id]
+        agama_id int [ref: > m_agama.id]
+        dari date
+        sampai date
+      }
+
+      Table penduduk_pekerjaan{
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id]
+        pekerjaan_id int [ref: > m_pekerjaan.id]
+        dari date
+        sampai date
+      }
+
+      Table penduduk_pendidikan{
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id]
+        pendidikan_id int [ref: > m_pendidikan.id]
+        dari date
+        sampai date
+      }
+
+      Table penduduk_rt{
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id]
+        rt_id int [ref: > rt.id]
+        dari date
+        sampai date
+      }
+
+      Table penduduk_rw{
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id]
+        rt_id int [ref: > rt.id]
+        rw_id int [ref: > rw.id]
+        dari date
+        sampai date
+      }
+
+  // kartu keluarga ==============
+    Table kartu_keluarga{
+      id int [pk, increment]
+      kk_no int
+      alamat_lengkap varchar
+      foto varchar
+      tanggal_dibuat date
+      tanggal_dihapus date
+      asal_data int(1) [note: "0 dibuat disini, 1 kedatangan"]
+      tanggal_datang date [note: "di isi jika asal data = "]
+    }
+
+    Table kartu_keluarga_list{
+      id int [pk, increment]
+      kk_id int [ref: > kartu_keluarga.id]
+      penduduk_id int [ref: > penduduk.id]
+      dari date
+      sampai date
+      hub_dgn_kk_id int [ref: > m_hub_dgn_kk.id]
+    }
+
+    Table kartu_keluarga_rt{
+      id int [pk, increment]
+      kk_id int [ref: > kartu_keluarga.id]
+      rt_id int [ref: > rt.id]
+      dari date
+      sampai date
+    }
+
+    Table kartu_keluarga_transaksi{
+      id int [pk, increment]
+      kartu_keluarga_id int [ref: > kartu_keluarga.id]
+      rt_id int [ref: > rt.id]
+      dari date
+      sampai date
+      jenis int [note: "1 pindah 2 datang"]
+      alamat_lain varchar
+    }
+
+  // tamu ========================
+    Table tamu{
+      id int [pk, increment]
+      nik varchar(16)
+      rt_id int [ref: > rt.id]
+      tamu_ke_penduduk_id int [ref: > penduduk.id]
+      nama varchar
+      kota_lahir varchar
+      tanggal_lahir date
+      jenis_kelamin int(1) [note: "1 laki-laki 0 perempuan"]
+      status_kawin int [note: "0 belum kawn 1 kawin 2 cerai hidup 3 cerai mati"]
+      status_tamu int [note: "0 kontrak, 1 menginap"]
+      alamat_lengkap varchar
+      tanggal_datang datetime 
+      tanggal_pergi datetime
+    }
+
+
+
+
+// surat =========================
+  // ps = pengajuan_surat
+    // surat keterangan ==========
+      Table ps_keterangan{
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id, note: "akun yang mengajukan"]
+        nomor_surat varchar [note: "di isi oleh petugas"]
+
+        nama varchar
+        
+        // tempat tanggal lahir
+          tempat_lahir varchar
+          tanggal_lahir date
+
+        jenis_kelamin int(1) [note: "1 laki-laki 0 perempuan"]
+
+        // warga negara jika 0 maka nama negara wajib diisi
+          warga_negara int(1) [note: "1 wni 0 wna"]
+          nama_negara varchar
+
+        agama_id int [ref: - m_agama.id]
+        status_kawin int [note: "0 belum kawn 1 kawin 2 cerai hidup 3 cerai mati"]
+
+        // jika tidak ada di db maka isi data lain
+          pendidikan_id int [ref: - m_pendidikan.id]
+          pendidikan_lain varchar
+
+        // Nomor ktp
+          nik varchar(16)
+          nik_jenis int [note: "1 No KTP, 2 KTP Sementara"]
+
+        // digunakan sebagai alamat dan juga untuk tanda tangan
+          rt_id int [ref: > rt.id]
+          rw_id int [ref: > rw.id]
+
+        // lampiran dari catatan
+          foto_pbb varchar
+          foto_kk varchar
+      }
+
+      // list keterangan
+      Table ps_keterangan_list{
+        id int [pk, increment]
+        surat_id int [ref: > ps_keterangan.id]
+        keterangan varchar
+      }
+
+      // list tracking
+      Table ps_keterangan_tracking{
+        id int [pk, increment]
+        surat_id int [ref: > ps_keterangan.id]
+        keterangan varchar
+        dari_pegawai_id int [ref: > pegawai.id]
+        ke_pegawai_id int [ref: > pegawai.id]
+        waktu datetime
+        status int [note: "1 diserahkan, 2 dikemalikan, 3 selesai, 4 diambil"]
+        pihak int [note: "1 penduduk, 2 rt, 3 rw 4 desa"]
+      }
+      
+  // pspk = Pengajuan surat pengantar keterangan
+    // domisili ==================
+      Table pspk_domisili{
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id, note: "akun yang mengajukan"]
+        penduduk_db_id int [ref: > penduduk.id, note: "Data penduduk yang diajukan jika ada, jika tidak maka nilainya null"]
+        nomor_surat varchar [note: "di isi oleh petugas"]
+
+        nama varchar
+        
+        // tempat tanggal lahir
+          tempat_lahir varchar
+          tanggal_lahir date
+
+        jenis_kelamin int(1) [note: "1 laki-laki 0 perempuan"]
+
+        // warga negara jika 0 maka nama negara wajib diisi
+          warga_negara int(1) [note: "1 wni 0 wna"]
+          nama_negara varchar
+
+        agama_id int [ref: - m_agama.id]
+        status_kawin int [note: "0 belum kawn 1 kawin 2 cerai hidup 3 cerai mati"]
+
+        // jika tidak ada di db maka isi data lain
+          pendidikan_id int [ref: - m_pendidikan.id]
+          pendidikan_lain varchar
+
+        // Nomor ktp
+          nik varchar(16)
+          nik_jenis int [note: "1 No KTP, 2 KTP Sementara"]
+
+        alamat_asal varchar
+
+        // digunakan sebagai alamat dan juga untuk tanda tangan
+          rt_id int [ref: > rt.id]
+          rw_id int [ref: > rw.id]
+      }
+
+      // list tracking
+      Table pspk_domisili_tracking{
+        id int [pk, increment]
+        surat_id int [ref: > pspk_domisili.id]
+        keterangan varchar
+        dari_pegawai_id int [ref: > pegawai.id]
+        ke_pegawai_id int [ref: > pegawai.id]
+        waktu datetime
+        status int [note: "1 diserahkan, 2 dikemalikan, 3 selesai, 4 diambil"]
+        pihak int [note: "1 penduduk, 2 rt, 3 rw 4 desa"]
+      }
+      
+    // pindah ====================
+      Table pspk_pindah{ // tabel untuk input bagian pindah ke (di tengah surat)
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id, note: "akun yang mengajukan"]
+        nomor_surat varchar [note: "di isi oleh petugas"]
+        
+        // pindah ke luar desa
+        provinsi varchar
+        kabupaten_kota varchar
+        kecamatan varchar
+        desa_kel varchar
+        rt_rw varchar
+        alamat_lengkap varchar // kp, jl dlll
+
+        // pindah masih di dalam desa
+        rt_id int [ref: > rt.id]
+        rw_id int [ref: > rw.id]
+
+        alasan_pindah varchar
+
+        // lampiran dari catatan
+          foto_pbb varchar
+          foto_kk varchar
+      }
+
+      // list penduduk yang pindah
+      Table pspk_pindah_list{
+        id int [pk, increment]
+        surat_id int [ref: > pspk_pindah.id]
+        penduduk_db_id int [ref: > penduduk.id, note: "Data penduduk yang diajukan jika ada, jika tidak maka nilainya null"]
+
+        nama varchar
+
+        // tempat tanggal lahir
+        tempat_lahir varchar
+        tanggal_lahir date
+        jenis_kelamin int(1) [note: "1 laki-laki 0 perempuan"]
+
+        // warga negara jika 0 maka nama negara wajib diisi
+        warga_negara int(1) [note: "1 wni 0 wna"]
+        nama_negara varchar
+
+        agama_id int [ref: - m_agama.id]
+        status_kawin int [note: "0 belum kawn 1 kawin 2 cerai hidup 3 cerai mati"]
+
+        // jika tidak ada di db maka isi data lain
+        pendidikan_id int [ref: - m_pendidikan.id]
+        pendidikan_lain varchar
+        
+        // jika tidak ada di db maka isi data lain
+        pekerjaan_id int [ref: - m_pekerjaan.id]
+        pekerjaan_lain varchar
+
+        // Nomor ktp
+        nik varchar(16)
+        nik_jenis int [note: "1 No KTP, 2 KTP Sementara"]
+
+        // digunakan sebagai alamat dan juga untuk tanda tangan
+        rt_id int [ref: > rt.id]
+        rw_id int [ref: > rw.id]
+      }
+
+      // list tracking
+      Table pspk_pindah_tracking{
+        id int [pk, increment]
+        surat_id int [ref: > pspk_pindah.id]
+        keterangan varchar
+        dari_pegawai_id int [ref: > pegawai.id]
+        ke_pegawai_id int [ref: > pegawai.id]
+        waktu datetime
+        status int [note: "1 diserahkan, 2 dikemalikan, 3 selesai, 4 diambil"]
+        pihak int [note: "1 penduduk, 2 rt, 3 rw 4 desa"]
+      }
+      
+    // kelahiran =================
+      Table pspk_kelahiran{
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id, note: "akun yang mengajukan"]
+        nomor_surat varchar [note: "di isi oleh petugas"]
+
+        // anak ========================
+          anak_nama varchar
+          
+          // tempat tanggal lahir
+            anak_tempat_lahir varchar
+            anak_tanggal_lahir datetime
+            // hari dan pukul akan terisi otomatis ketika tanggal lahir di isi
+            // hari sql: DATE_FORMAT(anak_tanggal_lahir, \'%W\') 
+            // tanggal sql: DATE_FORMAT(anak_tanggal_lahir, \'%H:%i\') 
+
+          anak_jenis_kelamin int(1) [note: "1 laki-laki 0 perempuan"]
+          anak_ke int 
+          anak_berat double // gram 
+          anak_panjang double // cm 
+
+        // ibu ========================
+          ibu_penduduk_id int [ref: > penduduk.id, note: "Data penduduk yang diajukan jika ada, jika tidak maka nilainya null"]
+          ibu_nama varchar
+          
+          // tempat tanggal lahir
+            ibu_tempat_lahir varchar
+            ibu_tanggal_lahir date
+
+          ibu_agama_id int [ref: - m_agama.id]
+
+          // jika tidak ada di db maka isi data lain
+            ibu_pekerjaan_id int [ref: - m_pekerjaan.id]
+            ibu_pekerjaan_lain varchar
+        
+        // ayah ========================
+          ayah_penduduk_id int [ref: > penduduk.id, note: "Data penduduk yang diajukan jika ada, jika tidak maka nilainya null"]
+          ayah_nama varchar
+          
+          // tempat tanggal lahir
+            ayah_tempat_lahir varchar
+            ayah_tanggal_lahir date
+          
+          ayah_agama_id int [ref: - m_agama.id]
+          
+          // jika tidak ada di db maka isi data lain
+            ayah_pekerjaan_id int [ref: - m_pekerjaan.id]
+            ayah_pekerjaan_lain varchar
+        
+        // digunakan sebagai alamat dan juga untuk tanda tangan
+          rt_id int [ref: > rt.id]
+          rw_id int [ref: > rw.id]
+          
+        // lampiran dari catatan
+          foto_pbb varchar
+          foto_kk varchar
+      }
+
+      // list tracking
+      Table pspk_kelahiran_tracking{
+        id int [pk, increment]
+        surat_id int [ref: > pspk_kelahiran.id]
+        keterangan varchar
+        dari_pegawai_id int [ref: > pegawai.id]
+        ke_pegawai_id int [ref: > pegawai.id]
+        waktu datetime
+        status int [note: "1 diserahkan, 2 dikemalikan, 3 selesai, 4 diambil"]
+        pihak int [note: "1 penduduk, 2 rt, 3 rw 4 desa"]
+      }
+      
+    // nikah =====================
+      Table pspk_nikah{
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id, note: "akun yang mengajukan"]
+        nomor_surat varchar [note: "di isi oleh petugas"]
+
+
+        // orang tua
+        // ibu ========================
+          ibu_penduduk_id int [ref: > penduduk.id, note: "Data penduduk yang diajukan jika ada, jika tidak maka nilainya null"]
+          ibu_nama varchar
+          
+          // tempat tanggal lahir
+            ibu_tempat_lahir varchar
+            ibu_tanggal_lahir date
+
+          // warga negara jika 0 maka nama negara wajib diisi
+            ibu_warga_negara int(1) [note: "1 wni 0 wna"]
+            ibu_nama_negara varchar
+          
+          ibu_agama_id int [ref: - m_agama.id]
+          
+          // jika tidak ada di db maka isi data lain
+            ibu_pekerjaan_id int [ref: - m_pekerjaan.id]
+            ibu_pekerjaan_lain varchar
+            ibu_alamat varchar
+        
+        // ayah ========================
+          ayah_penduduk_id int [ref: > penduduk.id, note: "Data penduduk yang diajukan jika ada, jika tidak maka nilainya null"]
+          ayah_nama varchar
+          
+          // tempat tanggal lahir
+            ayah_tempat_lahir varchar
+            ayah_tanggal_lahir date
+
+          // warga negara jika 0 maka nama negara wajib diisi
+            ayah_warga_negara int(1) [note: "1 wni 0 wna"]
+            ayah_nama_negara varchar
+          
+          ayah_agama_id int [ref: - m_agama.id]
+          
+          // jika tidak ada di db maka isi data lain
+            ayah_pekerjaan_id int [ref: - m_pekerjaan.id]
+            ayah_pekerjaan_lain varchar
+            ayah_alamat varchar
+
+        // tanggal dan waktu
+          waktu datetime
+          dengan_seorang int // 1 laki-laki 0 perempuan
+        
+
+        // calon
+          // calon_a =====================
+            calon_a_penduduk_id int [ref: > penduduk.id, note: "Data penduduk yang diajukan jika ada, jika tidak maka nilainya null"]
+            calon_a_nama varchar
+            
+            // tempat tanggal lahir
+            calon_a_tempat_lahir varchar
+            calon_a_tanggal_lahir date
+
+            // warga negara jika 0 maka nama negara wajib diisi
+            calon_a_warga_negara int(1) [note: "1 wni 0 wna"]
+            calon_a_nama_negara varchar
+
+            calon_a_agama_id int [ref: - m_agama.id]
+            // jika tidak ada di db maka isi data lain
+            calon_a_pendidikan_id int [ref: - m_pendidikan.id]
+            calon_a_pendidikan_lain varchar
+
+            // Nomor ktp
+            calon_a_nik varchar(16)
+            calon_a_nik_jenis int [note: "1 No KTP, 2 KTP Sementara"]
+
+            calon_a_no_kk varchar
+
+            calon_a_status_kawin int [note: "0 belum kawn 1 kawin 2 cerai hidup 3 cerai mati"]
+
+            // jika tidak ada di db maka isi data lain
+            calon_a_pekerjaan_id int [ref: - m_pekerjaan.id]
+            calon_a_pekerjaan_lain varchar
+
+            calon_a_alamat varchar
+
+          // calon_b =====================
+            calon_b_penduduk_id int [ref: > penduduk.id, note: "Data penduduk yang diajukan jika ada, jika tidak maka nilainya null"]
+            calon_b_nama varchar
+            
+            // tempat tanggal lahir
+            calon_b_tempat_lahir varchar
+            calon_b_tanggal_lahir date
+
+            // warga negara jika 0 maka nama negara wajib diisi
+            calon_b_warga_negara int(1) [note: "1 wni 0 wna"]
+            calon_b_nama_negara varchar
+
+            calon_b_agama_id int [ref: - m_agama.id]
+            // jika tidak ada di db maka isi data lain
+            calon_b_pendidikan_id int [ref: - m_pendidikan.id]
+            calon_b_pendidikan_lain varchar
+
+            // Nomor ktp
+            calon_b_nik varchar(16)
+            calon_b_nik_jenis int [note: "1 No KTP, 2 KTP Sementara"]
+
+            calon_b_no_kk varchar
+
+            calon_b_status_kawin int [note: "0 belum kawn 1 kawin 2 cerai hidup 3 cerai mati"]
+
+            // jika tidak ada di db maka isi data lain
+            calon_b_pekerjaan_id int [ref: - m_pekerjaan.id]
+            calon_b_pekerjaan_lain varchar
+
+            calon_b_alamat varchar
+
+        // digunakan sebagai alamat dan juga untuk tanda tangan
+        rt_id int [ref: > rt.id]
+        rw_id int [ref: > rw.id]
+
+        // lampiran dari catatan
+          foto_pbb varchar
+          foto_kk varchar
+      }
+
+      // list tracking
+      Table pspk_nikah_tracking{
+        id int [pk, increment]
+        surat_id int [ref: > pspk_nikah.id]
+        keterangan varchar
+        dari_pegawai_id int [ref: > pegawai.id]
+        ke_pegawai_id int [ref: > pegawai.id]
+        waktu datetime
+        status int [note: "1 diserahkan, 2 dikemalikan, 3 selesai, 4 diambil"]
+        pihak int [note: "1 penduduk, 2 rt, 3 rw 4 desa"]
+      }
+
+    // kk ========================
+      Table pspk_kk{
+        id int [pk, increment]
+        penduduk_id int [ref: > penduduk.id, note: "akun yang mengajukan"]
+        nomor_surat varchar [note: "di isi oleh petugas"]
+
+        // digunakan sebagai alamat dan juga untuk tanda tangan
+          rt_id int [ref: > rt.id]
+          rw_id int [ref: > rw.id]
+
+        // jaga-jaga jika nanti dibutuhkan
+        alamat_lengkap varchar
+      }
+
+      Table pspk_kk_list{
+        penduduk_id int [ref: > penduduk.id, note: "Data penduduk yang diajukan jika ada, jika tidak maka nilainya null"]
+        id int [pk, increment]
+        surat_id int [ref: > pspk_kk.id]
+        nama varchar
+        nik varchar(16)
+        jenis_kelamin int(1) [note: "1 laki-laki 0 perempuan"]
+        tanggal_lahir date
+        tempat_lahir varchar
+        agama_id int [ref: - m_agama.id]
+        pendidikan_id int [ref: - m_pendidikan.id]
+        pekerjaan_id int [ref: - m_pekerjaan.id]
+        status_kawin int [note: "0 belum kawn 1 kawin 2 cerai hidup 3 cerai mati"]
+        hub_dgn_kk_id int
+
+        // warga negara jika 0 maka nama negara wajib diisi
+          calon_b_warga_negara int(1) [note: "1 wni 0 wna"]
+          calon_b_nama_negara varchar
+
+        // dokumen imigrasi
+        no_password varchar
+        kitas_kitap varchar
+
+        // orang tua
+          ayah_nama varchar
+          ayah_list_id int [ref: > pspk_kk.id] // jika nama ayah ada di list surat ini
+          ibu_nama varchar
+          ibu_list_id int [ref: > pspk_kk.id]// jika nama ibu ada di list surat ini
+      }
+
+      // list tracking
+      Table pspk_kk_tracking{
+        id int [pk, increment]
+        surat_id int [ref: > pspk_kk.id]
+        keterangan varchar
+        dari_pegawai_id int [ref: > pegawai.id]
+        ke_pegawai_id int [ref: > pegawai.id]
+        waktu datetime
+        status int [note: "1 diserahkan, 2 dikemalikan, 3 selesai, 4 diambil"]
+        pihak int [note: "1 penduduk, 2 rt, 3 rw 4 desa"]
+      }
+

@@ -1,0 +1,32 @@
+Kenapa mengambil studi kasus
+	- 
+
+Kenapa memilih metode
+	- Kelebihan metode.
+	- Perbandingan dengan metode parent (boyer moore) nya.
+
+Argumen tambahan
+	- Aplikasi nya SaaS.
+	- Permasalahan di hardware.
+	- Datanya banyak.
+
+Konsep Bahan Presentasi:
+	- Cover
+	- Latar Belakang
+	- Metode
+	- Penelitian Terdahulu
+
+
+kelebihan menggunakan algortima di bahasa pemrograman di banding di sql
+1. contoh mencari dengan kata kunci andi kemudian data yang di database [andi, andhi, adnan] kalau di sql like maka yang akan keluar cuman andi, kalau menggunakan algoritma akan keluar [andi, andhi]
+2. resiko penyimpanan rusak akibat read/write yang banyak dari program.
+3. jika menggunakan pemrograman dan running di memory maka akan lebih cepat dan effisien tergantung kecepatan prosesor dan memory nya.
+4. membuat kualitas pencarian jadi lebih baik.
+5. Karena arsitektur aplikasi antrian nya sebenarnya Saas jadi bukan digunakan hanya di klinik ini saja, tetapi di pakai di berbagai tempat.
+
+
+Ditambahkan testing.
+
+
+
+
